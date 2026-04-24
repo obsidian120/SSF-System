@@ -1,0 +1,15 @@
+SSF v1.0 — Official Draft Release Notes
+Developed by: Obsidian
+
+This release packages the SSF project into a website-ready structure.
+
+Included:
+1. A browsable website hub.
+2. A formal SSF v1.0 specification.
+3. The original SSF system concept document.
+4. A perfect SSF OS blueprint.
+5. A real-world operating system evaluation list.
+6. A project thumbnail asset.
+
+Purpose:
+To make SSF easier to read, share, archive, and publish as a static website.
