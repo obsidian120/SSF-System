@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SSF v1.0 — Official Draft</title>
+  <meta name="description" content="SSF v1.0 Official Draft — Secure by default, Simple by default, Fast by default." />
+  <style>
+    :root{
+      --bg:#0b0d10;
+      --panel:#171c22;
+      --panel-2:#12161b;
+      --text:#e8edf3;
+      --muted:#9aa6b2;
+      --line:#2a3440;
+      --accent:#8bb8ff;
+      --accent-2:#77e0c6;
+      --accent-3:#b79cff;
+      --good:#7de2a8;
+      --warn:#ffd37d;
+      --shadow:0 12px 32px rgba(0,0,0,.28);
+      --max:1240px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,"Segoe UI",Arial,sans-serif;
+      line-height:1.62;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(139,184,255,.10), transparent 28%),
+        radial-gradient(circle at top left, rgba(119,224,198,.08), transparent 24%),
+        linear-gradient(180deg, #0b0d10 0%, #0e1217 100%);
+    }
+
+    a{color:inherit;text-decoration:none}
+    p{margin:0 0 12px}
+    h1,h2,h3{line-height:1.1;margin:0 0 12px}
+    h1{font-size:clamp(2.3rem,4.4vw,4rem);letter-spacing:-.055em}
+    h2{font-size:clamp(1.35rem,2vw,2rem);letter-spacing:-.025em}
+    h3{font-size:1.05rem;color:#f0f4f8}
+
+    .wrap{
+      width:min(calc(100% - 32px), var(--max));
+      margin:0 auto;
+      padding:34px 0 54px;
+    }
+
+    .shell{
+      display:grid;
+      grid-template-columns:310px minmax(0,1fr);
+      gap:24px;
+      align-items:start;
+    }
+
+    .sidebar{
+      position:sticky;
+      top:18px;
+      min-height:calc(100vh - 36px);
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(20,25,31,.82);
+      backdrop-filter:blur(10px);
+      box-shadow:var(--shadow);
+      border-radius:26px;
+      padding:20px;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+
+    .brand{
+      padding:10px 10px 16px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    .brand-mark{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color:var(--muted);
+      font-size:.92rem;
+      margin-bottom:10px;
+    }
+
+    .dot{
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:var(--accent-2);
+      box-shadow:0 0 0 6px rgba(119,224,198,.10);
+      flex:0 0 auto;
+    }
+
+    .brand-title{
+      font-size:1.4rem;
+      font-weight:700;
+      letter-spacing:-.035em;
+    }
+
+    .brand-sub{
+      color:var(--muted);
+      font-size:.92rem;
+      margin-top:4px;
+    }
+
+    .nav-title{
+      color:var(--muted);
+      font-size:.8rem;
+      text-transform:uppercase;
+      letter-spacing:.09em;
+      padding:0 10px;
+      margin-bottom:-6px;
+    }
+
+    .doc-nav{
+      display:grid;
+      gap:8px;
+    }
+
+    .nav-card{
+      display:block;
+      border:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.035);
+      border-radius:16px;
+      padding:12px 12px;
+      transition:transform .16s ease, background .16s ease, border-color .16s ease;
+    }
+
+    .nav-card:hover{
+      transform:translateY(-1px);
+      background:rgba(255,255,255,.06);
+      border-color:rgba(139,184,255,.30);
+      text-decoration:none;
+    }
+
+    .nav-card strong{
+      display:block;
+      font-size:.95rem;
+      margin-bottom:2px;
+    }
+
+    .nav-card span{
+      display:block;
+      color:var(--muted);
+      font-size:.82rem;
+      line-height:1.35;
+    }
+
+    .main{
+      display:grid;
+      gap:18px;
+    }
+
+    .hero,.panel{
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+      border-radius:28px;
+      overflow:hidden;
+    }
+
+    .hero{
+      padding:34px;
+      position:relative;
+    }
+
+    .hero:before{
+      content:"";
+      position:absolute;
+      right:-80px;
+      top:-120px;
+      width:360px;
+      height:360px;
+      background:radial-gradient(circle, rgba(139,184,255,.18), transparent 62%);
+      filter:blur(10px);
+      pointer-events:none;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      color:var(--muted);
+      font-size:.92rem;
+      margin-bottom:10px;
+      position:relative;
+    }
+
+    .lede{
+      max-width:850px;
+      color:#d5dde6;
+      font-size:1.05rem;
+      position:relative;
+    }
+
+    .pill-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+      position:relative;
+    }
+
+    .pill{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:#dce6f1;
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:.92rem;
+    }
+
+    .panel{
+      padding:24px;
+    }
+
+    .section-tag{
+      display:inline-block;
+      font-size:.78rem;
+      text-transform:uppercase;
+      letter-spacing:.09em;
+      color:var(--accent-2);
+      margin-bottom:9px;
+    }
+
+    .doc-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+      margin-top:12px;
+    }
+
+    .doc{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      background:rgba(255,255,255,.035);
+      border:1px solid rgba(255,255,255,.07);
+      border-radius:22px;
+      padding:18px;
+      min-height:210px;
+      transition:transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+
+    .doc:hover{
+      transform:translateY(-2px);
+      border-color:rgba(139,184,255,.34);
+      background:rgba(255,255,255,.055);
+    }
+
+    .doc-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+    }
+
+    .doc-icon{
+      width:42px;
+      height:42px;
+      border-radius:16px;
+      background:linear-gradient(135deg, rgba(139,184,255,.22), rgba(119,224,198,.13));
+      border:1px solid rgba(255,255,255,.08);
+      display:grid;
+      place-items:center;
+      font-weight:800;
+      color:#e9f2ff;
+      flex:0 0 auto;
+    }
+
+    .doc h3{
+      margin:0;
+      font-size:1.12rem;
+      letter-spacing:-.02em;
+    }
+
+    .doc p{
+      color:var(--muted);
+      font-size:.95rem;
+      margin:0;
+    }
+
+    .doc-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:auto;
+      padding-top:8px;
+    }
+
+    .button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      padding:9px 13px;
+      border:1px solid rgba(255,255,255,.09);
+      background:rgba(139,184,255,.12);
+      color:#eaf2ff;
+      font-size:.9rem;
+      transition:background .16s ease, border-color .16s ease;
+    }
+
+    .button:hover{
+      background:rgba(139,184,255,.18);
+      border-color:rgba(139,184,255,.34);
+      text-decoration:none;
+    }
+
+    .button.secondary{
+      background:rgba(255,255,255,.035);
+      color:#dce6f1;
+    }
+
+    .summary-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+      margin-top:12px;
+    }
+
+    .mini{
+      background:rgba(255,255,255,.035);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:18px;
+      padding:16px;
+    }
+
+    .mini strong{
+      display:block;
+      margin-bottom:4px;
+    }
+
+    .mini span{
+      color:var(--muted);
+      font-size:.92rem;
+    }
+
+    .about{
+      border-left:3px solid var(--accent-3);
+      padding-left:14px;
+      color:#d8e1ec;
+    }
+
+    .footer{
+      color:var(--muted);
+      text-align:center;
+      font-size:.9rem;
+      padding-top:8px;
+    }
+
+    @media (max-width: 1000px){
+      .shell{grid-template-columns:1fr}
+      .sidebar{position:relative;top:0;min-height:auto}
+      .doc-grid,.summary-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark"><span class="dot"></span><span>SSF v1.0 Draft</span></div>
+          <div class="brand-title">SSF v1.0</div>
+          <div class="brand-sub">Secure by default · Simple by default · Fast by default</div>
+        </div>
+
+        <div class="nav-title">Documents</div>
+        <nav class="doc-nav">
+          <a class="nav-card" href="docs/ssf-v1-specification.html">
+            <strong>SSF v1.0 Specification</strong>
+            <span>Formal standard, compliance levels, tests, and approval rules.</span>
+          </a>
+          <a class="nav-card" href="docs/ssf-system.html">
+            <strong>SSF System</strong>
+            <span>The core concept, rules, pillars, and architecture principles.</span>
+          </a>
+          <a class="nav-card" href="docs/perfect-ssf-os.html">
+            <strong>The Perfect SSF OS</strong>
+            <span>Target architecture for a truly SSF-native operating system.</span>
+          </a>
+          <a class="nav-card" href="docs/os-evaluation-list.html">
+            <strong>OS Evaluation List</strong>
+            <span>Strict SSF review of real operating systems.</span>
+          </a>
+          <a class="nav-card" href="assets/ssf-thumbnail.png">
+            <strong>Thumbnail</strong>
+            <span>Project image / preview asset.</span>
+          </a>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <section class="hero">
+          <div class="eyebrow"><span class="dot"></span><span>Versioned operating system design project</span></div>
+          <h1>SSF v1.0 — Official Draft</h1>
+          <p class="lede">
+            SSF is a strict operating system design and evaluation framework built around three default-state guarantees:
+            <strong>Secure by default</strong>, <strong>Simple by default</strong>, and <strong>Fast by default</strong>.
+            This website-ready release collects the current specification, concept documents, ideal architecture, and OS evaluations.
+          </p>
+          <div class="pill-row">
+            <span class="pill">Default-state-first</span>
+            <span class="pill">Official Draft</span>
+            <span class="pill">Version 1.0</span>
+            <span class="pill">Release date: 2026-04-24</span>
+            <span class="pill">Rule-based evaluation</span>
+            <span class="pill">Architecture over marketing</span>
+            <span class="pill">Codename: Obsidian</span>
+          </div>
+        </section>
+
+        <section class="panel" id="documents">
+          <div class="section-tag">Library</div>
+          <h2>Documents</h2>
+          <p class="lede">Choose a document from the left menu or open one of the cards below.</p>
+
+          <div class="doc-grid">
+            <a class="doc" href="docs/ssf-v1-specification.html">
+              <div class="doc-top">
+                <div>
+                  <h3>SSF v1.0 Specification</h3>
+                  <p>The formal versioned spec: scope, terminology, compliance levels, approval process, exception policy, and test methodology.</p>
+                </div>
+                <div class="doc-icon">1.0</div>
+              </div>
+              <div class="doc-actions">
+                <span class="button">Open document</span>
+                <span class="button secondary">Standard</span>
+              </div>
+            </a>
+
+            <a class="doc" href="docs/ssf-system.html">
+              <div class="doc-top">
+                <div>
+                  <h3>SSF System</h3>
+                  <p>The foundational doctrine: the three pillars, decision rule, rejection rule, approval criteria, and enforced architecture model.</p>
+                </div>
+                <div class="doc-icon">SSF</div>
+              </div>
+              <div class="doc-actions">
+                <span class="button">Open document</span>
+                <span class="button secondary">Core concept</span>
+              </div>
+            </a>
+
+            <a class="doc" href="docs/perfect-ssf-os.html">
+              <div class="doc-top">
+                <div>
+                  <h3>The Perfect SSF OS</h3>
+                  <p>The positive target: how an OS would be structured if SSF shaped every layer from boot to apps, updates, UI, networking, and drivers.</p>
+                </div>
+                <div class="doc-icon">OS</div>
+              </div>
+              <div class="doc-actions">
+                <span class="button">Open document</span>
+                <span class="button secondary">Blueprint</span>
+              </div>
+            </a>
+
+            <a class="doc" href="docs/os-evaluation-list.html">
+              <div class="doc-top">
+                <div>
+                  <h3>OS Evaluation List</h3>
+                  <p>A strict SSF review of real systems including Windows, macOS, ChromeOS, Ubuntu Core, GrapheneOS, Qubes OS, OpenBSD, and Fedora variants.</p>
+                </div>
+                <div class="doc-icon">EV</div>
+              </div>
+              <div class="doc-actions">
+                <span class="button">Open document</span>
+                <span class="button secondary">Evaluation</span>
+              </div>
+            </a>
+          </div>
+        </section>
+
+        <section class="panel" id="overview">
+          <div class="section-tag">Project overview</div>
+          <h2>What SSF is</h2>
+          <div class="summary-grid">
+            <div class="mini">
+              <strong>Secure by default</strong>
+              <span>Protection must exist before expert hardening, setup tweaks, or user discipline.</span>
+            </div>
+            <div class="mini">
+              <strong>Simple by default</strong>
+              <span>The system should have one coherent model instead of overlapping mechanisms.</span>
+            </div>
+            <div class="mini">
+              <strong>Fast by default</strong>
+              <span>Responsiveness and low idle cost are treated as architectural requirements.</span>
+            </div>
+          </div>
+        </section>
+
+        
+        
+        <section class="panel" id="about">
+          <div class="section-tag">About</div>
+          <h2>About this release</h2>
+          <div class="about">
+            <p>This website is the local release hub for SSF v1.0 — Official Draft. It connects the core specification, the SSF system document, the ideal OS blueprint, and the real-world OS evaluation list into one browsable package.</p>
+
+            <p><strong>Developed by: Obsidian</strong></p>
+
+            <p class="muted">All documents follow the same SSF criteria and design language to keep the project consistent, readable, and ready to share.</p>
+          </div>
+        </section>
+    
+
+
+        <div class="footer">
+          SSF v1.0 Draft — Secure by default • Simple by default • Fast by default
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
