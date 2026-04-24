@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SSF System</title>
+  <meta name="description" content="SSF System — Secure by default, Simple by default, Fast by default." />
+  <style>
+    :root{
+      --bg:#0b0d10;
+      --bg-soft:#12161b;
+      --panel:#171c22;
+      --panel-2:#1c232b;
+      --text:#e8edf3;
+      --muted:#9aa6b2;
+      --line:#2a3440;
+      --accent:#8bb8ff;
+      --accent-2:#77e0c6;
+      --accent-3:#b79cff;
+      --shadow: 0 12px 32px rgba(0,0,0,.28);
+      --radius: 18px;
+      --max: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body{
+      margin:0;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(139,184,255,.10), transparent 28%),
+        radial-gradient(circle at top left, rgba(119,224,198,.08), transparent 24%),
+        linear-gradient(180deg, #0b0d10 0%, #0e1217 100%);
+      color:var(--text);
+      line-height:1.65;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap{
+      width:min(calc(100% - 32px), var(--max));
+      margin:0 auto;
+    }
+
+    .hero{
+      padding: 48px 0 22px;
+    }
+
+    .hero-card{
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow);
+      border-radius: 28px;
+      padding: 34px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card:before{
+      content:"";
+      position:absolute;
+      inset:-20% auto auto 58%;
+      width:320px;
+      height:320px;
+      background: radial-gradient(circle, rgba(139,184,255,.18), transparent 60%);
+      pointer-events:none;
+      filter: blur(12px);
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      color:var(--muted);
+      font-size:.92rem;
+      letter-spacing:.02em;
+      margin-bottom: 10px;
+    }
+
+    .dot{
+      width:8px;height:8px;border-radius:999px;background:var(--accent-2);
+      box-shadow: 0 0 0 6px rgba(119,224,198,.10);
+    }
+
+    h1,h2,h3{ line-height:1.15; margin:0 0 12px; }
+    h1{ font-size: clamp(2.2rem, 4vw, 3.6rem); letter-spacing:-.04em; }
+    h2{ font-size: clamp(1.4rem, 2vw, 1.9rem); }
+    h3{ font-size: 1.02rem; color:#f0f4f8; margin-top:22px; }
+
+    .lede{
+      color:#d5dde6;
+      font-size:1.05rem;
+      max-width: 780px;
+      margin: 10px 0 20px;
+    }
+
+    .pill-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .pill{
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      color:#dce6f1;
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:.92rem;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns: 280px minmax(0,1fr);
+      gap:24px;
+      align-items:start;
+      padding: 18px 0 60px;
+    }
+
+    .toc{
+      position: sticky;
+      top: 18px;
+      background: rgba(20,25,31,.82);
+      backdrop-filter: blur(10px);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius: 22px;
+      padding:18px;
+      box-shadow: var(--shadow);
+    }
+
+    .toc h2{
+      font-size:1rem;
+      margin-bottom:10px;
+    }
+
+    .toc a{
+      display:block;
+      padding:8px 10px;
+      border-radius:12px;
+      color:#d9e3ef;
+      font-size:.94rem;
+    }
+
+    .toc a:hover{
+      text-decoration:none;
+      background:rgba(255,255,255,.05);
+    }
+
+    .content{
+      display:grid;
+      gap:18px;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius: 24px;
+      padding: 26px 26px 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .muted{ color: var(--muted); }
+
+    ul{
+      margin: 8px 0 0 0;
+      padding-left: 20px;
+    }
+
+    li{ margin: 6px 0; }
+
+    .section-tag{
+      display:inline-block;
+      font-size:.8rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--accent-2);
+      margin-bottom:10px;
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:16px;
+      margin-top:10px;
+    }
+
+    .mini{
+      background: rgba(255,255,255,.035);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius: 18px;
+      padding:16px;
+    }
+
+    .about{
+      border-left: 3px solid var(--accent-3);
+      padding-left: 14px;
+      color:#d8e1ec;
+    }
+
+    .footer{
+      padding: 8px 0 48px;
+      color: var(--muted);
+      text-align:center;
+      font-size:.92rem;
+    }
+
+    @media (max-width: 940px){
+      .layout{ grid-template-columns: 1fr; }
+      .toc{ position: relative; top: 0; }
+      .grid-2{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap hero">
+    <div class="hero-card">
+      <div class="eyebrow"><span class="dot"></span><span>Operating system design doctrine</span></div>
+      <h1>SSF System</h1>
+      <p class="lede">
+        SSF stands for <strong>Secure by default</strong>, <strong>Simple by default</strong>, and <strong>Fast by default</strong>.
+        The SSF system should be the core design of an OS and act as a rejection filter, design discipline, and architectural standard.
+      </p>
+      <div class="pill-row">
+        <span class="pill">Security without post-install hardening</span>
+        <span class="pill">Low cognitive load</span>
+        <span class="pill">Responsive daily operation</span>
+        <span class="pill">Architecture-led coherence</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap layout">
+    <nav class="toc">
+      <h2>Quick links</h2>
+      <a href="#secure">Secure by default</a>
+      <a href="#simple">Simple by default</a>
+      <a href="#fast">Fast by default</a>
+      <a href="#decision">Decision rule</a>
+      <a href="#priority">Priority rule</a>
+      <a href="#rejection">Rejection rule</a>
+      <a href="#approval">Approval rule</a>
+      <a href="#architecture">System architecture implications</a>
+      <a href="#requirements">Operational requirements</a>
+      <a href="#checklist">SSF approval checklist</a>
+      <a href="#maturity">Maturity</a>
+      <a href="#about">About</a>
+    </nav>
+
+    <main class="content">
+      <section class="card" id="secure">
+        <div class="section-tag">Pillar 01</div>
+        <h2>Secure by default</h2>
+        <p>An OS must provide meaningful protection in its default installation, without requiring expert knowledge or post-install hardening.</p>
+        <h3>Architectural implications</h3>
+        <ul>
+          <li>Applications must run in isolated execution environments by default</li>
+          <li>User applications must not have direct write access to core system areas</li>
+          <li>Inter-process communication must be explicit, limited, and permission-aware</li>
+          <li>Services must run with the minimum privileges required</li>
+          <li>The default software supply chain must be verified and signed</li>
+          <li>The system should reduce global shared state wherever possible</li>
+        </ul>
+        <h3>Examples</h3>
+        <ul>
+          <li>Apps run sandboxed by default</li>
+          <li>System binaries and core configuration are protected from ordinary application writes</li>
+          <li>Background services use dedicated restricted service accounts</li>
+          <li>Application-to-application access is denied unless explicitly allowed</li>
+          <li>Software packages are signed and verified before installation</li>
+        </ul>
+      </section>
+
+      <section class="card" id="simple">
+        <div class="section-tag">Pillar 02</div>
+        <h2>Simple by default</h2>
+        <p>An OS must be understandable and comfortable in normal use, with low cognitive load and minimal configuration burden.</p>
+        <h3>Architectural implications</h3>
+        <ul>
+          <li>The system should prefer one clear mechanism over several competing ones</li>
+          <li>Core system behavior should be predictable and consistent</li>
+          <li>Security behavior should be understandable in user terms, not kernel terms</li>
+          <li>Configuration should be layered cleanly, with minimal overlap</li>
+          <li>Advanced behavior should be available, but not required for normal use</li>
+        </ul>
+        <h3>Examples</h3>
+        <ul>
+          <li>One primary package manager</li>
+          <li>One clear service model</li>
+          <li>One consistent permissions model</li>
+          <li>User-facing settings avoid exposing low-level implementation details</li>
+          <li>The system setup does not require the user to make expert decisions</li>
+        </ul>
+      </section>
+
+      <section class="card" id="fast">
+        <div class="section-tag">Pillar 03</div>
+        <h2>Fast by default</h2>
+        <p>An OS must feel responsive and lightweight in daily operation, avoiding unnecessary background cost and interface friction.</p>
+        <h3>Architectural implications</h3>
+        <ul>
+          <li>Services should be started on demand where possible</li>
+          <li>Idle resource use must be treated as a first-class design cost</li>
+          <li>The system should avoid heavy abstraction layers unless justified</li>
+          <li>Startup paths should be short and measurable</li>
+          <li>User interactions should not depend on unnecessary background orchestration</li>
+        </ul>
+        <h3>Examples</h3>
+        <ul>
+          <li>Idle CPU activity remains low</li>
+          <li>Memory footprint is bounded and explainable</li>
+          <li>Search indexing is limited, scheduled, or on-demand</li>
+          <li>Services are event-driven instead of permanently resident</li>
+          <li>Applications launch without large hidden initialization chains</li>
+        </ul>
+      </section>
+
+      <section class="card" id="decision">
+        <div class="section-tag">Core rule</div>
+        <h2>Decision rule</h2>
+        <p>Every major feature, package, service, and interface decision must be evaluated against SSF.</p>
+        <ul>
+          <li>Does it improve or weaken default security?</li>
+          <li>Does it reduce or increase user complexity?</li>
+          <li>Does it improve or harm responsiveness and efficiency?</li>
+          <li>Does it introduce a second mechanism for something already solved?</li>
+          <li>Does it require persistent background cost?</li>
+          <li>Can its value be demonstrated clearly?</li>
+        </ul>
+      </section>
+
+      <section class="card" id="priority">
+        <div class="section-tag">Core rule</div>
+        <h2>Priority rule</h2>
+        <p>Security must not be weakened carelessly. Simplicity is preferred over unnecessary configurability. Performance must remain strong enough to preserve a smooth desktop experience.</p>
+        <div class="grid-2">
+          <div class="mini">
+            <h3>Implications</h3>
+            <ul>
+              <li>A convenient feature should not bypass isolation casually</li>
+              <li>A configurable feature should not replace a better default</li>
+              <li>A feature that is safe and flexible but constantly heavy should be reconsidered</li>
+            </ul>
+          </div>
+          <div class="mini">
+            <h3>Test</h3>
+            <ul>
+              <li>If one pillar is weakened, the gain in the others must be strong and explicit</li>
+              <li>Trade-offs should never be hidden inside convenience language</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="rejection">
+        <div class="section-tag">Core rule</div>
+        <h2>Rejection rule</h2>
+        <p>A feature should be rejected or deferred if it significantly harms one SSF pillar without strong and demonstrable user value.</p>
+        <h3>Rejection examples</h3>
+        <ul>
+          <li>A package format that duplicates existing system packaging without strong benefit</li>
+          <li>A daemon that runs permanently for a rarely used feature</li>
+          <li>A settings layer that overlaps with another settings layer</li>
+          <li>A compatibility mechanism that silently weakens isolation</li>
+          <li>A plugin model that allows unrestricted code injection into trusted components</li>
+        </ul>
+      </section>
+
+      <section class="card" id="approval">
+        <div class="section-tag">Qualification</div>
+        <h2>Approval rule</h2>
+        <p>A feature should be considered SSF-approved only if it satisfies the following conditions.</p>
+        <div class="grid-2">
+          <div class="mini">
+            <h3>Baseline conditions</h3>
+            <ul>
+              <li>Safe in its default state</li>
+              <li>Understandable in its default state</li>
+              <li>Efficient in its default state</li>
+            </ul>
+          </div>
+          <div class="mini">
+            <h3>Integration conditions</h3>
+            <ul>
+              <li>Fits into existing system architecture cleanly</li>
+              <li>Does not introduce unnecessary duplication</li>
+              <li>Does not require users to understand internal complexity</li>
+            </ul>
+          </div>
+        </div>
+        <h3>Operational conditions</h3>
+        <ul>
+          <li>Resource cost is measurable</li>
+          <li>Security boundaries are clear</li>
+          <li>Failure behavior is predictable</li>
+          <li>The feature can be disabled, removed, or replaced without destabilizing the system</li>
+        </ul>
+      </section>
+
+      <section class="card" id="architecture">
+        <div class="section-tag">Architecture</div>
+        <h2>System architecture implications</h2>
+        <p>The SSF system should directly shape the architecture of the OS.</p>
+
+        <h3>Kernel boundary</h3>
+        <ul>
+          <li>The kernel should provide a small, stable, security-focused core</li>
+          <li>Privileged code paths should remain minimal where practical</li>
+          <li>Policy-heavy logic should stay in user space unless strong reasons exist otherwise</li>
+          <li>Drivers and privileged services should face stricter acceptance rules</li>
+        </ul>
+
+        <h3>User space structure</h3>
+        <ul>
+          <li>System services, user services, and applications should be separated cleanly</li>
+          <li>The OS should reduce reliance on global mutable state</li>
+          <li>Applications should interact through defined APIs instead of broad ambient authority</li>
+        </ul>
+
+        <h3>Service model</h3>
+        <ul>
+          <li>Services start on demand when feasible</li>
+          <li>Long-running services must justify continuous presence</li>
+          <li>Service permissions must be explicit</li>
+          <li>Service failures should degrade gracefully</li>
+        </ul>
+
+        <h3>Application model</h3>
+        <ul>
+          <li>Applications should be treated as untrusted by default</li>
+          <li>Default sandboxing and explicit capability grants</li>
+          <li>Limited filesystem scope and limited hardware access</li>
+          <li>Permissions should be revocable where possible</li>
+        </ul>
+
+        <h3>Permissions model</h3>
+        <ul>
+          <li>Permissions should be tied to actions, not broad permanent trust</li>
+          <li>Prompts should appear only when meaningful</li>
+          <li>Permission language should describe real effects</li>
+          <li>Persistent grants should be exceptional, not assumed</li>
+        </ul>
+
+        <h3>Package management</h3>
+        <ul>
+          <li>One primary package and update path</li>
+          <li>Signed repositories and clear trust boundaries</li>
+          <li>Security updates install automatically by default</li>
+          <li>Dependency complexity should be hidden from normal users</li>
+        </ul>
+
+        <h3>Update model</h3>
+        <ul>
+          <li>Atomic or transactional updates where possible</li>
+          <li>Reliable rollback on failure</li>
+          <li>Minimal need for manual recovery</li>
+          <li>Update interruptions should not leave the system half-configured</li>
+        </ul>
+
+        <h3>Filesystem design</h3>
+        <ul>
+          <li>Separate system state, application state, and user data</li>
+          <li>Protect system paths from casual modification</li>
+          <li>Make cleanup and recovery easier through clear structure</li>
+          <li>System image should be read-only or tightly protected where possible</li>
+        </ul>
+
+        <h3>Networking model</h3>
+        <ul>
+          <li>No unnecessary listening services</li>
+          <li>Per-application network policy support</li>
+          <li>Remote exposure requires explicit intent</li>
+          <li>Firewall policy should be enabled and sensible by default</li>
+        </ul>
+
+        <h3>Interface design</h3>
+        <ul>
+          <li>A single system settings application</li>
+          <li>Searchable advanced settings instead of exposing everything at once</li>
+          <li>Security-related prompts should use plain language</li>
+          <li>Animations and effects must not compromise responsiveness on normal hardware</li>
+        </ul>
+
+        <h3>Compatibility policy</h3>
+        <ul>
+          <li>Legacy support should be contained</li>
+          <li>Compatibility layers should be visibly distinct from native trusted paths</li>
+          <li>Unsafe compatibility modes should be opt-in</li>
+          <li>The system should prefer safe degradation over broad exceptions</li>
+        </ul>
+
+        <h3>Boot process</h3>
+        <ul>
+          <li>Boot should verify critical system integrity before handing off control</li>
+          <li>Startup should be short, observable, and recoverable</li>
+          <li>Optional subsystems should not block core boot success</li>
+          <li>Failed boot updates should return to a known-good state</li>
+        </ul>
+
+        <h3>Session model</h3>
+        <ul>
+          <li>User sessions should be isolated from each other by default</li>
+          <li>Session startup should avoid large chains of mandatory background components</li>
+          <li>User login should not imply broad trust escalation for applications</li>
+          <li>Ending a session should cleanly revoke temporary grants and temporary runtime state</li>
+        </ul>
+
+        <h3>Trusted computing base</h3>
+        <ul>
+          <li>The trusted computing base should be kept as small as practical</li>
+          <li>Critical trusted components should be easy to identify and audit</li>
+          <li>Convenience features should not silently expand trusted code paths</li>
+          <li>Non-essential integrations should remain outside core trust boundaries</li>
+        </ul>
+
+        <h3>App runtime</h3>
+        <ul>
+          <li>Runtime environments should be standardized enough to avoid fragmentation</li>
+          <li>Applications should receive only the runtime capabilities they need</li>
+          <li>Language runtimes and frameworks should not bypass OS security boundaries</li>
+          <li>Heavy runtime initialization should be minimized to preserve responsiveness</li>
+        </ul>
+
+        <h3>Driver policy</h3>
+        <ul>
+          <li>Drivers should be reviewed as high-risk components</li>
+          <li>Unsupported or legacy drivers should not be granted broad trust automatically</li>
+          <li>Driver loading should be explicit, verified, and recoverable</li>
+          <li>Driver failures should be contained as much as the architecture allows</li>
+        </ul>
+
+        <h3>Recovery model</h3>
+        <ul>
+          <li>Recovery should be available without specialist knowledge</li>
+          <li>The system should support rollback to a previously known-good state</li>
+          <li>Recovery tools should not require full manual repair of system internals</li>
+          <li>Diagnostics should be understandable enough to guide action</li>
+        </ul>
+
+        <h3>Installation model</h3>
+        <ul>
+          <li>Installation should produce a secure baseline with no expert choices required</li>
+          <li>Optional features should be clearly separated from core system installation</li>
+          <li>First boot should not expose unnecessary network services or broad permissions</li>
+          <li>Fresh install behavior should already meet SSF expectations</li>
+        </ul>
+      </section>
+
+      <section class="card" id="requirements">
+        <div class="section-tag">Operational standard</div>
+        <h2>Operational requirements</h2>
+        <h3>Security</h3>
+        <ul>
+          <li>Verified software source path</li>
+          <li>Strong default isolation</li>
+          <li>Restricted privilege by default</li>
+          <li>Protected system state</li>
+        </ul>
+        <h3>Simplicity</h3>
+        <ul>
+          <li>Coherent system model</li>
+          <li>Minimal mandatory configuration</li>
+          <li>Clear user-facing behaviors</li>
+          <li>Limited mechanism duplication</li>
+        </ul>
+        <h3>Performance</h3>
+        <ul>
+          <li>Low idle cost</li>
+          <li>Responsive shell and applications</li>
+          <li>Bounded background activity</li>
+          <li>Measurable service overhead</li>
+        </ul>
+      </section>
+
+      <section class="card" id="checklist">
+        <div class="section-tag">Practical filter</div>
+        <h2>SSF approval checklist</h2>
+        <ul>
+          <li>Is it safe without extra setup?</li>
+          <li>Is it understandable without specialist knowledge?</li>
+          <li>Is its background cost minimal or justified?</li>
+          <li>Does it avoid duplicating an existing mechanism?</li>
+          <li>Does it fit the overall model cleanly?</li>
+          <li>Can its privilege boundaries be described clearly?</li>
+          <li>Can failure occur without system-wide damage?</li>
+          <li>Does it preserve a fast normal user experience?</li>
+        </ul>
+      </section>
+
+
+      <section class="card" id="score-system">
+        <div class="section-tag">Scoring</div>
+        <h2>SSF Score System</h2>
+        <p>SSF v1.0 may be evaluated using an optional 100-point score model. The score does not replace written analysis; it standardizes comparison.</p>
+        <div class="grid-3">
+          <div class="mini"><h3>Secure — 40</h3><p>App isolation, system integrity, default network exposure, update model, and privilege boundaries.</p></div>
+          <div class="mini"><h3>Simple — 30</h3><p>Coherent system model, user cognitive load, setup complexity, and permission clarity.</p></div>
+          <div class="mini"><h3>Fast — 30</h3><p>Idle resource usage, background services, and responsiveness.</p></div>
+        </div>
+        <h3>Hard fail rules</h3>
+        <ul>
+          <li>If Secure is below 20/40, the system cannot be SSF-approved.</li>
+          <li>If Simple is below 15/30, the system cannot be fully SSF-approved for normal users.</li>
+          <li>If Fast is below 15/30, the system cannot be fully SSF-approved for daily general use.</li>
+        </ul>
+      </section>
+
+      <section class="card" id="maturity">
+        <div class="section-tag">Assessment</div>
+        <h2>Maturity</h2>
+        <ul>
+          <li><strong>Level 1</strong> — Safe defaults are present</li>
+          <li><strong>Level 2</strong> — Major subsystems consistently follow SSF rules</li>
+          <li><strong>Level 3</strong> — Architecture is fully shaped by SSF, with minimal exceptions</li>
+        </ul>
+      </section>
+
+      <section class="card" id="about">
+        <div class="section-tag">About</div>
+        <h2>About this draft</h2>
+        <div class="about">
+          <p>This document is an expanded conceptual draft of the SSF system, intended to read like an early operating system doctrine or architecture note rather than a marketing page.</p>
+          <p><strong>Developed by:</strong> Obsidian</p>
+          <p class="muted">The codename is intentionally placed here in a quieter way, so it feels embedded in the identity of the project instead of acting like a big front-page label.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="wrap footer">
+    SSF System — Secure by default • Simple by default • Fast by default
+  </div>
+</body>
+</html>

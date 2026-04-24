@@ -1,0 +1,635 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSF OS Evaluation with Scores</title><style>
+:root{--bg:#0b0d10;--panel:#171c22;--text:#e8edf3;--muted:#9aa6b2;--line:#2a3440;--accent:#8bb8ff;--accent-2:#77e0c6;--accent-3:#b79cff;--good:#7de2a8;--warn:#ffd37d;--bad:#ff9c9c;--shadow:0 12px 32px rgba(0,0,0,.28);--max:1180px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,"Segoe UI",Arial,sans-serif;line-height:1.68;color:var(--text);background:radial-gradient(circle at top right,rgba(139,184,255,.10),transparent 28%),radial-gradient(circle at top left,rgba(119,224,198,.08),transparent 24%),linear-gradient(180deg,#0b0d10 0%,#0e1217 100%)}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}.wrap{width:min(calc(100% - 32px),var(--max));margin:0 auto}.hero{padding:48px 0 22px}.hero-card,.card,.toc{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow)}.hero-card{border-radius:28px;padding:34px;position:relative;overflow:hidden}.hero-card:before{content:"";position:absolute;inset:-20% auto auto 58%;width:320px;height:320px;background:radial-gradient(circle,rgba(139,184,255,.18),transparent 60%);filter:blur(12px);pointer-events:none}.eyebrow{display:inline-flex;gap:10px;align-items:center;color:var(--muted);font-size:.92rem;letter-spacing:.02em;margin-bottom:10px}.dot{width:8px;height:8px;border-radius:999px;background:var(--accent-2);box-shadow:0 0 0 6px rgba(119,224,198,.10)}h1,h2,h3,h4{line-height:1.15;margin:0 0 12px}h1{font-size:clamp(2.2rem,4vw,3.6rem);letter-spacing:-.04em}h2{font-size:clamp(1.4rem,2vw,1.95rem)}h3{font-size:1.08rem;color:#f0f4f8;margin-top:22px}h4{font-size:.98rem;color:#dfe7f0;margin-top:16px}p{margin:0 0 12px}ul{margin:8px 0 0 0;padding-left:20px}li{margin:6px 0}.lede{color:#d5dde6;font-size:1.05rem;max-width:900px;margin:10px 0 18px}.pill-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.pill{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#dce6f1;padding:10px 14px;border-radius:999px;font-size:.92rem}.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:24px;align-items:start;padding:18px 0 60px}.toc{position:sticky;top:18px;border-radius:22px;padding:18px;max-height:calc(100vh - 36px);overflow:auto;backdrop-filter:blur(10px)}.toc h2{font-size:1rem;margin-bottom:10px}.toc a{display:block;padding:8px 10px;border-radius:12px;color:#d9e3ef;font-size:.94rem}.toc a:hover{text-decoration:none;background:rgba(255,255,255,.05)}.content{display:grid;gap:18px}.card{border-radius:24px;padding:26px 26px 22px}.section-tag{display:inline-block;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent-2);margin-bottom:10px}.muted{color:var(--muted)}.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:10px}.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:10px}.mini{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:16px}.verdict{border-left:3px solid var(--accent);padding-left:14px;margin-top:10px;color:#dbe6f1}.goodline{border-left-color:var(--good)}.warnline{border-left-color:var(--warn)}.badline{border-left-color:var(--bad)}table{width:100%;border-collapse:collapse;margin-top:10px;font-size:.96rem}th,td{padding:12px 12px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left;vertical-align:top}th{color:#d9e5f0;font-weight:600}.about{border-left:3px solid var(--accent-3);padding-left:14px;color:#d8e1ec}.footer{padding:8px 0 48px;color:var(--muted);text-align:center;font-size:.92rem}.score-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.score-card{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:18px}.score-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.score-card h3{margin-top:0}.score-badge{border-radius:999px;padding:8px 12px;font-weight:700;border:1px solid rgba(255,255,255,.1)}.score-badge.good{background:rgba(125,226,168,.12);color:#dff9ea}.score-badge.warn{background:rgba(255,211,125,.12);color:#fff1c9}.score-badge.bad{background:rgba(255,156,156,.12);color:#ffe3e3}.bar-row{display:grid;grid-template-columns:64px 1fr 55px;gap:10px;align-items:center;margin:8px 0;color:#cfd8e3;font-size:.92rem}.bar{height:9px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:999px}.mini-verdict{margin-top:12px;color:var(--muted);font-size:.9rem}.small{font-size:.92rem}@media(max-width:980px){.layout{grid-template-columns:1fr}.toc{position:relative;top:0;max-height:none}.grid-2,.grid-3,.score-grid{grid-template-columns:1fr}}
+</style></head><body>
+<div class="wrap hero"><div class="hero-card"><div class="eyebrow"><span class="dot"></span><span>Operating system evaluation against SSF v1.0</span></div>
+<h1>SSF OS Evaluation List</h1><p class="lede">This document evaluates operating systems against SSF using both written analysis and the 100-point SSF Score System. The evaluation remains strict: scores support the verdict, but do not replace scope-aware reasoning.</p>
+<div class="pill-row"><span class="pill">24 systems evaluated</span><span class="pill">Score model included</span><span class="pill">Strict SSF reading</span><span class="pill">Developed by: Obsidian</span></div></div></div>
+<div class="wrap layout"><nav class="toc"><h2>Quick links</h2><a href="#method">Method</a><a href="#summary">Score summary</a><a href="#os1">ChromeOS</a>
+<a href="#os2">Ubuntu Core</a>
+<a href="#os3">Fedora Silverblue / Atomic Desktop</a>
+<a href="#os4">macOS</a>
+<a href="#os5">Windows 11</a>
+<a href="#os6">Qubes OS</a>
+<a href="#os7">GrapheneOS</a>
+<a href="#os8">Fedora CoreOS</a>
+<a href="#os9">OpenBSD</a>
+<a href="#os10">iOS / iPadOS</a>
+<a href="#os11">Android / AOSP</a>
+<a href="#os12">SteamOS</a>
+<a href="#os13">Arch Linux</a>
+<a href="#os14">NixOS</a>
+<a href="#os15">Kali Linux</a>
+<a href="#os16">Tails</a>
+<a href="#os17">Ubuntu Desktop</a>
+<a href="#os18">Debian</a>
+<a href="#os19">Fedora Workstation</a>
+<a href="#os20">Linux Mint</a>
+<a href="#os21">FreeBSD</a>
+<a href="#os22">openSUSE MicroOS / Aeon</a>
+<a href="#os23">Alpine Linux</a>
+<a href="#os24">Whonix</a><a href="#about">About</a></nav>
+<main class="content"><section class="card" id="method"><div class="section-tag">Method</div><h2>Method</h2><p>The SSF score uses a weighted 100-point model: Secure 40, Simple 30, Fast 30. Scores are interpreted with hard fail rules and declared scope.</p><div class="grid-3"><div class="mini"><h3>Secure</h3><p>App isolation, system integrity, network exposure, update model, privilege boundaries.</p></div><div class="mini"><h3>Simple</h3><p>Coherent system model, low cognitive load, simple setup, permission clarity.</p></div><div class="mini"><h3>Fast</h3><p>Low idle cost, bounded background services, responsiveness.</p></div></div></section>
+<section class="card" id="summary"><div class="section-tag">Summary</div><h2>Score summary</h2><table><thead><tr><th>System</th><th>Secure</th><th>Simple</th><th>Fast</th><th>Total</th><th>Verdict</th></tr></thead><tbody><tr>
+<td><strong>ChromeOS</strong></td>
+<td>35/40</td><td>25/30</td><td>25/30</td>
+<td><strong>85</strong>/100</td>
+<td>SSF Native / Conditional mainstream approval</td>
+</tr>
+<tr>
+<td><strong>Ubuntu Core</strong></td>
+<td>38/40</td><td>25/30</td><td>24/30</td>
+<td><strong>87</strong>/100</td>
+<td>SSF Native in appliance scope</td>
+</tr>
+<tr>
+<td><strong>Fedora Silverblue / Atomic Desktop</strong></td>
+<td>30/40</td><td>16/30</td><td>22/30</td>
+<td><strong>68</strong>/100</td>
+<td>Conditional / Not approved under hard desktop reading</td>
+</tr>
+<tr>
+<td><strong>macOS</strong></td>
+<td>31/40</td><td>25/30</td><td>24/30</td>
+<td><strong>80</strong>/100</td>
+<td>SSF Approved-adjacent / Not hard-approved</td>
+</tr>
+<tr>
+<td><strong>Windows 11</strong></td>
+<td>25/40</td><td>12/30</td><td>14/30</td>
+<td><strong>51</strong>/100</td>
+<td>Not SSF-approved</td>
+</tr>
+<tr>
+<td><strong>Qubes OS</strong></td>
+<td>40/40</td><td>10/30</td><td>8/30</td>
+<td><strong>58</strong>/100</td>
+<td>Not SSF-approved</td>
+</tr>
+<tr>
+<td><strong>GrapheneOS</strong></td>
+<td>40/40</td><td>27/30</td><td>25/30</td>
+<td><strong>92</strong>/100</td>
+<td>SSF Native in mobile scope</td>
+</tr>
+<tr>
+<td><strong>Fedora CoreOS</strong></td>
+<td>36/40</td><td>25/30</td><td>24/30</td>
+<td><strong>85</strong>/100</td>
+<td>SSF Native in server/container scope</td>
+</tr>
+<tr>
+<td><strong>OpenBSD</strong></td>
+<td>32/40</td><td>18/30</td><td>21/30</td>
+<td><strong>71</strong>/100</td>
+<td>Not SSF-approved under strict app-model reading</td>
+</tr>
+<tr>
+<td><strong>iOS / iPadOS</strong></td>
+<td>39/40</td><td>28/30</td><td>26/30</td>
+<td><strong>93</strong>/100</td>
+<td>SSF Native in mobile scope</td>
+</tr>
+<tr>
+<td><strong>Android / AOSP</strong></td>
+<td>34/40</td><td>20/30</td><td>22/30</td>
+<td><strong>76</strong>/100</td>
+<td>Conditionally SSF-approved in supported mobile scope</td>
+</tr>
+<tr>
+<td><strong>SteamOS</strong></td>
+<td>27/40</td><td>25/30</td><td>27/30</td>
+<td><strong>79</strong>/100</td>
+<td>Conditionally SSF-approved in gaming handheld scope</td>
+</tr>
+<tr>
+<td><strong>Arch Linux</strong></td>
+<td>20/40</td><td>6/30</td><td>28/30</td>
+<td><strong>54</strong>/100</td>
+<td>Not SSF-approved</td>
+</tr>
+<tr>
+<td><strong>NixOS</strong></td>
+<td>28/40</td><td>12/30</td><td>21/30</td>
+<td><strong>61</strong>/100</td>
+<td>Not SSF-approved</td>
+</tr>
+<tr>
+<td><strong>Kali Linux</strong></td>
+<td>18/40</td><td>10/30</td><td>20/30</td>
+<td><strong>48</strong>/100</td>
+<td>Not SSF-approved</td>
+</tr>
+<tr>
+<td><strong>Tails</strong></td>
+<td>36/40</td><td>22/30</td><td>16/30</td>
+<td><strong>74</strong>/100</td>
+<td>Conditionally SSF-approved in privacy/ephemeral scope</td>
+</tr>
+<tr>
+<td><strong>Ubuntu Desktop</strong></td>
+<td>27/40</td><td>21/30</td><td>20/30</td>
+<td><strong>68</strong>/100</td>
+<td>Not SSF-approved</td>
+</tr>
+<tr>
+<td><strong>Debian</strong></td>
+<td>24/40</td><td>18/30</td><td>23/30</td>
+<td><strong>65</strong>/100</td>
+<td>Not SSF-approved</td>
+</tr>
+<tr>
+<td><strong>Fedora Workstation</strong></td>
+<td>29/40</td><td>20/30</td><td>22/30</td>
+<td><strong>71</strong>/100</td>
+<td>Not SSF-approved under hard desktop reading</td>
+</tr>
+<tr>
+<td><strong>Linux Mint</strong></td>
+<td>22/40</td><td>25/30</td><td>22/30</td>
+<td><strong>69</strong>/100</td>
+<td>Not SSF-approved</td>
+</tr>
+<tr>
+<td><strong>FreeBSD</strong></td>
+<td>27/40</td><td>16/30</td><td>23/30</td>
+<td><strong>66</strong>/100</td>
+<td>Not SSF-approved</td>
+</tr>
+<tr>
+<td><strong>openSUSE MicroOS / Aeon</strong></td>
+<td>34/40</td><td>23/30</td><td>24/30</td>
+<td><strong>81</strong>/100</td>
+<td>Conditionally SSF-approved in immutable desktop/server scope</td>
+</tr>
+<tr>
+<td><strong>Alpine Linux</strong></td>
+<td>27/40</td><td>14/30</td><td>27/30</td>
+<td><strong>68</strong>/100</td>
+<td>Not SSF-approved</td>
+</tr>
+<tr>
+<td><strong>Whonix</strong></td>
+<td>37/40</td><td>14/30</td><td>12/30</td>
+<td><strong>63</strong>/100</td>
+<td>Not SSF-approved / conditional anonymity scope</td>
+</tr></tbody></table></section>
+
+<section class="card" id="os1">
+<div class="section-tag">Candidate 01</div><h2>ChromeOS</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge good">85/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:87.5%"></i></div><strong>35/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:83.3%"></i></div><strong>25/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:83.3%"></i></div><strong>25/30</strong></div>
+</div>
+<div class="verdict goodline"><p><strong>Verdict:</strong> SSF Native / Conditional mainstream approval. Strong verified default model; broader app layers keep approval conditional.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 35/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 25/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 25/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os2">
+<div class="section-tag">Candidate 02</div><h2>Ubuntu Core</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge good">87/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:95.0%"></i></div><strong>38/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:83.3%"></i></div><strong>25/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:80.0%"></i></div><strong>24/30</strong></div>
+</div>
+<div class="verdict goodline"><p><strong>Verdict:</strong> SSF Native in appliance scope. Immutable, transactional, strictly confined, and scope-disciplined.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 38/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 25/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 24/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os3">
+<div class="section-tag">Candidate 03</div><h2>Fedora Silverblue / Atomic Desktop</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge bad">68/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:75.0%"></i></div><strong>30/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:53.3%"></i></div><strong>16/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:73.3%"></i></div><strong>22/30</strong></div>
+</div>
+<div class="verdict badline"><p><strong>Verdict:</strong> Conditional / Not approved under hard desktop reading. Strong architecture direction, but too many user-facing models.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 30/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 16/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 22/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os4">
+<div class="section-tag">Candidate 04</div><h2>macOS</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge warn">80/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:77.5%"></i></div><strong>31/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:83.3%"></i></div><strong>25/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:80.0%"></i></div><strong>24/30</strong></div>
+</div>
+<div class="verdict warnline"><p><strong>Verdict:</strong> SSF Approved-adjacent / Not hard-approved. Strong coherence and platform security; app confinement not strict enough for full pass.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 31/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 25/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 24/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os5">
+<div class="section-tag">Candidate 05</div><h2>Windows 11</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge bad">51/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:62.5%"></i></div><strong>25/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:40.0%"></i></div><strong>12/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:46.7%"></i></div><strong>14/30</strong></div>
+</div>
+<div class="verdict badline"><p><strong>Verdict:</strong> Not SSF-approved. Compatibility-first, multi-model, and high background complexity.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 25/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 12/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 14/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os6">
+<div class="section-tag">Candidate 06</div><h2>Qubes OS</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge bad">58/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:100.0%"></i></div><strong>40/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:33.3%"></i></div><strong>10/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:26.7%"></i></div><strong>8/30</strong></div>
+</div>
+<div class="verdict badline"><p><strong>Verdict:</strong> Not SSF-approved. Security is exceptional, but simplicity and speed fail the doctrine.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 40/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 10/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 8/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os7">
+<div class="section-tag">Candidate 07</div><h2>GrapheneOS</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge good">92/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:100.0%"></i></div><strong>40/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:90.0%"></i></div><strong>27/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:83.3%"></i></div><strong>25/30</strong></div>
+</div>
+<div class="verdict goodline"><p><strong>Verdict:</strong> SSF Native in mobile scope. One of the clearest real-world SSF examples in a constrained scope.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 40/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 27/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 25/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os8">
+<div class="section-tag">Candidate 08</div><h2>Fedora CoreOS</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge good">85/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:90.0%"></i></div><strong>36/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:83.3%"></i></div><strong>25/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:80.0%"></i></div><strong>24/30</strong></div>
+</div>
+<div class="verdict goodline"><p><strong>Verdict:</strong> SSF Native in server/container scope. Controlled image-like host with automatic updates and rollback.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 36/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 25/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 24/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os9">
+<div class="section-tag">Candidate 09</div><h2>OpenBSD</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge warn">71/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:80.0%"></i></div><strong>32/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:60.0%"></i></div><strong>18/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:70.0%"></i></div><strong>21/30</strong></div>
+</div>
+<div class="verdict warnline"><p><strong>Verdict:</strong> Not SSF-approved under strict app-model reading. Excellent security culture, but not a uniform app sandbox/capability model.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 32/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 18/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 21/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os10">
+<div class="section-tag">Candidate 10</div><h2>iOS / iPadOS</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge good">93/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:97.5%"></i></div><strong>39/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:93.3%"></i></div><strong>28/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:86.7%"></i></div><strong>26/30</strong></div>
+</div>
+<div class="verdict goodline"><p><strong>Verdict:</strong> SSF Native in mobile scope. Extremely strong default confinement, coherent UX, and integrated update model.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 39/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 28/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 26/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os11">
+<div class="section-tag">Candidate 11</div><h2>Android / AOSP</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge warn">76/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:85.0%"></i></div><strong>34/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:66.7%"></i></div><strong>20/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:73.3%"></i></div><strong>22/30</strong></div>
+</div>
+<div class="verdict warnline"><p><strong>Verdict:</strong> Conditionally SSF-approved in supported mobile scope. Strong base model; fragmentation weakens universal approval.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 34/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 20/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 22/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os12">
+<div class="section-tag">Candidate 12</div><h2>SteamOS</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge warn">79/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:67.5%"></i></div><strong>27/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:83.3%"></i></div><strong>25/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:90.0%"></i></div><strong>27/30</strong></div>
+</div>
+<div class="verdict warnline"><p><strong>Verdict:</strong> Conditionally SSF-approved in gaming handheld scope. Focused appliance-like gaming mode, but desktop mode weakens general approval.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 27/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 25/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 27/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os13">
+<div class="section-tag">Candidate 13</div><h2>Arch Linux</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge bad">54/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:50.0%"></i></div><strong>20/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:20.0%"></i></div><strong>6/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:93.3%"></i></div><strong>28/30</strong></div>
+</div>
+<div class="verdict badline"><p><strong>Verdict:</strong> Not SSF-approved. Fast and transparent, but default outcome is user-dependent.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 20/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 6/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 28/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os14">
+<div class="section-tag">Candidate 14</div><h2>NixOS</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge bad">61/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:70.0%"></i></div><strong>28/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:40.0%"></i></div><strong>12/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:70.0%"></i></div><strong>21/30</strong></div>
+</div>
+<div class="verdict badline"><p><strong>Verdict:</strong> Not SSF-approved. Reproducibility and rollback are great; user-facing complexity breaks SSF simplicity.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 28/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 12/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 21/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os15">
+<div class="section-tag">Candidate 15</div><h2>Kali Linux</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge bad">48/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:45.0%"></i></div><strong>18/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:33.3%"></i></div><strong>10/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:66.7%"></i></div><strong>20/30</strong></div>
+</div>
+<div class="verdict badline"><p><strong>Verdict:</strong> Not SSF-approved. Specialist offensive/security tool platform, not safe-default daily OS.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 18/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 10/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 20/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os16">
+<div class="section-tag">Candidate 16</div><h2>Tails</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge warn">74/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:90.0%"></i></div><strong>36/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:73.3%"></i></div><strong>22/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:53.3%"></i></div><strong>16/30</strong></div>
+</div>
+<div class="verdict warnline"><p><strong>Verdict:</strong> Conditionally SSF-approved in privacy/ephemeral scope. Strong privacy defaults, but narrow and performance-limited.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 36/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 22/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 16/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os17">
+<div class="section-tag">Candidate 17</div><h2>Ubuntu Desktop</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge bad">68/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:67.5%"></i></div><strong>27/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:70.0%"></i></div><strong>21/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:66.7%"></i></div><strong>20/30</strong></div>
+</div>
+<div class="verdict badline"><p><strong>Verdict:</strong> Not SSF-approved. Good baseline security features, but still too traditional and mixed-model.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 27/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 21/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 20/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os18">
+<div class="section-tag">Candidate 18</div><h2>Debian</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge bad">65/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:60.0%"></i></div><strong>24/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:60.0%"></i></div><strong>18/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:76.7%"></i></div><strong>23/30</strong></div>
+</div>
+<div class="verdict badline"><p><strong>Verdict:</strong> Not SSF-approved. Stable and respected, but safety depends too much on configuration and role.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 24/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 18/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 23/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os19">
+<div class="section-tag">Candidate 19</div><h2>Fedora Workstation</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge warn">71/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:72.5%"></i></div><strong>29/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:66.7%"></i></div><strong>20/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:73.3%"></i></div><strong>22/30</strong></div>
+</div>
+<div class="verdict warnline"><p><strong>Verdict:</strong> Not SSF-approved under hard desktop reading. SELinux and modern stack are strong, but app/software model remains mixed.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 29/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 20/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 22/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os20">
+<div class="section-tag">Candidate 20</div><h2>Linux Mint</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge bad">69/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:55.0%"></i></div><strong>22/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:83.3%"></i></div><strong>25/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:73.3%"></i></div><strong>22/30</strong></div>
+</div>
+<div class="verdict badline"><p><strong>Verdict:</strong> Not SSF-approved. Very simple and friendly, but security model is too conventional.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 22/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 25/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 22/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os21">
+<div class="section-tag">Candidate 21</div><h2>FreeBSD</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge bad">66/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:67.5%"></i></div><strong>27/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:53.3%"></i></div><strong>16/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:76.7%"></i></div><strong>23/30</strong></div>
+</div>
+<div class="verdict badline"><p><strong>Verdict:</strong> Not SSF-approved. Jails and securelevel are strong tools, but not default universal app confinement.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 27/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 16/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 23/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os22">
+<div class="section-tag">Candidate 22</div><h2>openSUSE MicroOS / Aeon</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge warn">81/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:85.0%"></i></div><strong>34/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:76.7%"></i></div><strong>23/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:80.0%"></i></div><strong>24/30</strong></div>
+</div>
+<div class="verdict warnline"><p><strong>Verdict:</strong> Conditionally SSF-approved in immutable desktop/server scope. Transactional updates and immutability are highly SSF-aligned.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 34/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 23/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 24/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os23">
+<div class="section-tag">Candidate 23</div><h2>Alpine Linux</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge bad">68/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:67.5%"></i></div><strong>27/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:46.7%"></i></div><strong>14/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:90.0%"></i></div><strong>27/30</strong></div>
+</div>
+<div class="verdict badline"><p><strong>Verdict:</strong> Not SSF-approved. Small and hardened, but too specialist/manual for default user safety.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 27/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 14/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 27/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="os24">
+<div class="section-tag">Candidate 24</div><h2>Whonix</h2>
+<div class="score-card">
+  <div class="score-card-head"><h3>SSF Score</h3><span class="score-badge bad">63/100</span></div>
+  <div class="bar-row"><span>Secure</span><div class="bar"><i style="width:92.5%"></i></div><strong>37/40</strong></div>
+  <div class="bar-row"><span>Simple</span><div class="bar"><i style="width:46.7%"></i></div><strong>14/30</strong></div>
+  <div class="bar-row"><span>Fast</span><div class="bar"><i style="width:40.0%"></i></div><strong>12/30</strong></div>
+</div>
+<div class="verdict badline"><p><strong>Verdict:</strong> Not SSF-approved / conditional anonymity scope. Strong anonymity architecture, but complex and heavy for general SSF.</p></div>
+<h3>SSF reasoning</h3>
+<ul>
+<li><strong>Secure:</strong> scored 37/40 based on default isolation, system integrity, update model, network exposure, and privilege boundaries.</li>
+<li><strong>Simple:</strong> scored 14/30 based on how coherent the normal user model is and whether safety depends on expert setup.</li>
+<li><strong>Fast:</strong> scored 12/30 based on expected idle cost, background complexity, and responsiveness within the system's intended scope.</li>
+</ul>
+<h3>Hard reading</h3>
+<p>This score is interpreted under SSF v1.0 with scope awareness. A high score can still be conditional if the OS only satisfies SSF in a narrow deployment class.</p>
+</section>
+
+<section class="card" id="about"><div class="section-tag">About</div><h2>About this document</h2><div class="about"><p>This evaluation extends the SSF concept into a stricter external benchmark. It is intentionally willing to say “not approved” even for strong systems when they fail the total doctrine.</p><p><strong>Developed by: Obsidian</strong></p><p class="muted">All systems were evaluated under the same SSF criteria, without adapting the framework to individual platform strengths.</p></div></section></main></div><div class="wrap footer">SSF OS Evaluation — Secure by default • Simple by default • Fast by default</div></body></html>

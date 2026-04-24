@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SSF v1.0 Specification</title>
+  <meta name="description" content="SSF v1.0 Specification — Secure by default, Simple by default, Fast by default." />
+  <style>
+    :root{
+      --bg:#0b0d10;
+      --panel:#171c22;
+      --text:#e8edf3;
+      --muted:#9aa6b2;
+      --line:#2a3440;
+      --accent:#8bb8ff;
+      --accent-2:#77e0c6;
+      --accent-3:#b79cff;
+      --good:#7de2a8;
+      --warn:#ffd37d;
+      --bad:#ff9c9c;
+      --shadow:0 12px 32px rgba(0,0,0,.28);
+      --max:1160px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,"Segoe UI",Arial,sans-serif;
+      line-height:1.68;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(139,184,255,.10), transparent 28%),
+        radial-gradient(circle at top left, rgba(119,224,198,.08), transparent 24%),
+        linear-gradient(180deg, #0b0d10 0%, #0e1217 100%);
+    }
+
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    .wrap{width:min(calc(100% - 32px), var(--max));margin:0 auto}
+    .hero{padding:48px 0 22px}
+    .hero-card,.card,.toc{
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:var(--shadow);
+    }
+
+    .hero-card{
+      border-radius:28px;
+      padding:34px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-card:before{
+      content:"";
+      position:absolute;
+      inset:-20% auto auto 58%;
+      width:320px;
+      height:320px;
+      background:radial-gradient(circle, rgba(139,184,255,.18), transparent 60%);
+      filter:blur(12px);
+      pointer-events:none;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      color:var(--muted);
+      font-size:.92rem;
+      letter-spacing:.02em;
+      margin-bottom:10px;
+    }
+
+    .dot{
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:var(--accent-2);
+      box-shadow:0 0 0 6px rgba(119,224,198,.10);
+    }
+
+    h1,h2,h3,h4{line-height:1.15;margin:0 0 12px}
+    h1{font-size:clamp(2.2rem,4vw,3.7rem);letter-spacing:-.04em}
+    h2{font-size:clamp(1.4rem,2vw,1.95rem)}
+    h3{font-size:1.08rem;color:#f0f4f8;margin-top:22px}
+    h4{font-size:.98rem;color:#dfe7f0;margin-top:16px}
+    p{margin:0 0 12px}
+    ul{margin:8px 0 0 0;padding-left:20px}
+    li{margin:6px 0}
+
+    code{
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      padding:2px 7px;
+      border-radius:8px;
+      color:#e9f2ff;
+      font-family:"Cascadia Code","Consolas",monospace;
+      font-size:.92em;
+    }
+
+    .lede{
+      color:#d5dde6;
+      font-size:1.05rem;
+      max-width:900px;
+      margin:10px 0 18px;
+    }
+
+    .pill-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .pill{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:#dce6f1;
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:.92rem;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:300px minmax(0,1fr);
+      gap:24px;
+      align-items:start;
+      padding:18px 0 60px;
+    }
+
+    .toc{
+      position:sticky;
+      top:18px;
+      border-radius:22px;
+      padding:18px;
+      max-height:calc(100vh - 36px);
+      overflow:auto;
+      backdrop-filter:blur(10px);
+    }
+
+    .toc h2{font-size:1rem;margin-bottom:10px}
+    .toc a{
+      display:block;
+      padding:8px 10px;
+      border-radius:12px;
+      color:#d9e3ef;
+      font-size:.94rem;
+    }
+    .toc a:hover{text-decoration:none;background:rgba(255,255,255,.05)}
+
+    .content{display:grid;gap:18px}
+    .card{border-radius:24px;padding:26px 26px 22px}
+
+    .section-tag{
+      display:inline-block;
+      font-size:.8rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--accent-2);
+      margin-bottom:10px;
+    }
+
+    .muted{color:var(--muted)}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:10px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:10px}
+
+    .mini{
+      background:rgba(255,255,255,.035);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:18px;
+      padding:16px;
+    }
+
+    .rule{
+      border-left:3px solid var(--accent);
+      padding-left:14px;
+      margin-top:10px;
+      color:#dbe6f1;
+    }
+
+    .goodline{border-left-color:var(--good)}
+    .warnline{border-left-color:var(--warn)}
+    .badline{border-left-color:var(--bad)}
+
+    .badge-row{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:.9rem;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:#e6edf5;
+    }
+    .badge.good{background:rgba(125,226,168,.10);border-color:rgba(125,226,168,.25);color:#dff9ea}
+    .badge.warn{background:rgba(255,211,125,.10);border-color:rgba(255,211,125,.25);color:#fff1c9}
+    .badge.bad{background:rgba(255,156,156,.10);border-color:rgba(255,156,156,.25);color:#ffe3e3}
+    .dot-good,.dot-warn,.dot-bad{width:9px;height:9px;border-radius:999px;display:inline-block}
+    .dot-good{background:var(--good)}
+    .dot-warn{background:var(--warn)}
+    .dot-bad{background:var(--bad)}
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:10px;
+      font-size:.96rem;
+    }
+    th,td{
+      padding:12px 12px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      text-align:left;
+      vertical-align:top;
+    }
+    th{color:#d9e5f0;font-weight:600}
+
+    .about{
+      border-left:3px solid var(--accent-3);
+      padding-left:14px;
+      color:#d8e1ec;
+    }
+
+    .footer{
+      padding:8px 0 48px;
+      color:var(--muted);
+      text-align:center;
+      font-size:.92rem;
+    }
+
+    @media (max-width: 980px){
+      .layout{grid-template-columns:1fr}
+      .toc{position:relative;top:0;max-height:none}
+      .grid-2,.grid-3{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap hero">
+    <div class="hero-card">
+      <div class="eyebrow"><span class="dot"></span><span>Versioned operating system design standard</span></div>
+      <h1>SSF v1.0 Specification</h1>
+      <p class="lede">
+        SSF v1.0 defines a strict operating system evaluation and design standard based on three pillars:
+        <strong>Secure by default</strong>, <strong>Simple by default</strong>, and <strong>Fast by default</strong>.
+        It is designed to be used as a rejection framework, compliance model, and architecture guide.
+      </p>
+      <div class="pill-row">
+        <span class="pill">Version: 1.0</span>
+        <span class="pill">Status: Draft Specification</span>
+        <span class="pill">Default-state-first</span>
+        <span class="pill">Codename: Obsidian</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap layout">
+    <nav class="toc">
+      <h2>Quick links</h2>
+      <a href="#abstract">Abstract</a>
+      <a href="#scope">Scope</a>
+      <a href="#terms">Terminology</a>
+      <a href="#principles">Core principles</a>
+      <a href="#requirements">Normative requirements</a>
+      <a href="#levels">Compliance levels</a>
+      <a href="#approval">Approval process</a>
+      <a href="#tests">Test methodology</a>
+      <a href="#architecture">Architecture requirements</a>
+      <a href="#exceptions">Exception policy</a>
+      <a href="#non-goals">Non-goals</a>
+      <a href="#versioning">Versioning</a>
+      <a href="#statement">Final statement</a>
+      <a href="#about">About</a>
+    </nav>
+
+    <main class="content">
+      <section class="card" id="abstract">
+        <div class="section-tag">Section 01</div>
+        <h2>Abstract</h2>
+        <p>
+          SSF is a design and evaluation standard for operating systems.
+          It defines what an OS must provide in its default state before users configure, harden, optimize, or customize anything.
+        </p>
+        <div class="rule">
+          <p><strong>SSF asks one primary question:</strong></p>
+          <p>What does the system guarantee when the user does nothing?</p>
+        </div>
+        <p>
+          A system may be powerful, popular, configurable, or secure in expert hands and still fail SSF.
+          SSF approval depends on default behavior, architectural enforcement, and consistency across the system.
+        </p>
+      </section>
+
+      <section class="card" id="scope">
+        <div class="section-tag">Section 02</div>
+        <h2>Scope</h2>
+        <p>SSF v1.0 applies to operating systems and OS-like platforms, including:</p>
+        <ul>
+          <li>desktop operating systems</li>
+          <li>mobile operating systems</li>
+          <li>server and appliance operating systems</li>
+          <li>embedded operating systems</li>
+          <li>specialized secure operating environments</li>
+        </ul>
+        <h3>Scope declaration requirement</h3>
+        <p>
+          Every SSF evaluation must declare the target scope.
+          A system may be SSF-approved in one scope but not another.
+        </p>
+        <div class="grid-2">
+          <div class="mini">
+            <h3>Valid example</h3>
+            <p><code>SSF-approved for appliance deployments</code></p>
+            <p class="muted">The approval is limited, honest, and testable.</p>
+          </div>
+          <div class="mini">
+            <h3>Invalid example</h3>
+            <p><code>SSF-approved</code> without scope</p>
+            <p class="muted">Too vague unless the system passes broadly across its full claimed use.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="terms">
+        <div class="section-tag">Section 03</div>
+        <h2>Terminology</h2>
+        <table>
+          <thead>
+            <tr><th>Term</th><th>Definition</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Default state</strong></td>
+              <td>The behavior of the OS immediately after installation, first boot, or factory reset, before expert configuration.</td>
+            </tr>
+            <tr>
+              <td><strong>SSF-approved</strong></td>
+              <td>A system or component satisfies the SSF requirements for its declared scope.</td>
+            </tr>
+            <tr>
+              <td><strong>Conditionally approved</strong></td>
+              <td>A system satisfies SSF only under a defined operating mode, deployment class, or restriction.</td>
+            </tr>
+            <tr>
+              <td><strong>Default-state-first</strong></td>
+              <td>The doctrine that the unmodified default experience is the primary object of evaluation.</td>
+            </tr>
+            <tr>
+              <td><strong>Architecture-enforced</strong></td>
+              <td>A property is protected by system design, not merely by recommendation or user discipline.</td>
+            </tr>
+            <tr>
+              <td><strong>Mechanism duplication</strong></td>
+              <td>Multiple competing ways to solve the same normal user problem without strong justification.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card" id="principles">
+        <div class="section-tag">Section 04</div>
+        <h2>Core principles</h2>
+
+        <div class="grid-3">
+          <div class="mini">
+            <h3>Secure by default</h3>
+            <p>The OS must provide meaningful protection without post-install hardening.</p>
+          </div>
+          <div class="mini">
+            <h3>Simple by default</h3>
+            <p>The OS must be understandable and comfortable in normal use without expert knowledge.</p>
+          </div>
+          <div class="mini">
+            <h3>Fast by default</h3>
+            <p>The OS must feel responsive and lightweight without cleanup, tuning, or disabling background features.</p>
+          </div>
+        </div>
+
+        <h3>Priority order</h3>
+        <p><strong>Security &gt; Simplicity &gt; Performance</strong></p>
+        <ul>
+          <li>Security must not be weakened carelessly.</li>
+          <li>Simplicity is preferred over unnecessary configurability.</li>
+          <li>Performance must remain strong enough to preserve smooth everyday use.</li>
+        </ul>
+      </section>
+
+      <section class="card" id="requirements">
+        <div class="section-tag">Section 05</div>
+        <h2>Normative requirements</h2>
+        <p>
+          The following requirements define the minimum expectations for SSF v1.0.
+          These are written as system-level requirements, not marketing claims.
+        </p>
+
+        <h3>Secure by default requirements</h3>
+        <ul>
+          <li>Applications must not receive broad trust by default.</li>
+          <li>System state must be protected from ordinary application modification.</li>
+          <li>Software authenticity must be verifiable through the default distribution path.</li>
+          <li>Network exposure must be minimal on first boot.</li>
+          <li>Privilege escalation must be visible, narrow, and auditable.</li>
+          <li>Security-sensitive features must fail closed where practical.</li>
+        </ul>
+
+        <h3>Simple by default requirements</h3>
+        <ul>
+          <li>Normal users must not need to understand internal architecture to use the OS safely.</li>
+          <li>The system should provide one primary mechanism per normal task.</li>
+          <li>Setup must not require expert choices to produce a safe baseline.</li>
+          <li>Security prompts must describe real-world effects in user terms.</li>
+          <li>Advanced options must not define the normal path.</li>
+          <li>Duplicated configuration layers must be avoided or clearly justified.</li>
+        </ul>
+
+        <h3>Fast by default requirements</h3>
+        <ul>
+          <li>Idle resource usage must be bounded and explainable.</li>
+          <li>Background activity must be limited, scheduled, or event-driven where possible.</li>
+          <li>Always-on services must justify continuous presence.</li>
+          <li>UI and application interaction paths must avoid unnecessary background orchestration.</li>
+          <li>Heavy initialization must not be hidden behind normal user actions without strong reason.</li>
+          <li>The system must remain responsive under normal load for its declared hardware class.</li>
+        </ul>
+      </section>
+
+      <section class="card" id="levels">
+        <div class="section-tag">Section 06</div>
+        <h2>Compliance levels</h2>
+        <p>
+          SSF v1.0 defines three compliance levels. A system must declare the highest level it satisfies.
+        </p>
+
+        <table>
+          <thead>
+            <tr><th>Level</th><th>Name</th><th>Meaning</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Level 1</strong></td>
+              <td>SSF Baseline</td>
+              <td>Safe defaults exist, and the system avoids obvious violations such as unnecessary exposed services or unsafe setup defaults.</td>
+            </tr>
+            <tr>
+              <td><strong>Level 2</strong></td>
+              <td>SSF Consistent</td>
+              <td>Major subsystems consistently follow SSF rules. Security, simplicity, and performance are visible in architecture, not only configuration.</td>
+            </tr>
+            <tr>
+              <td><strong>Level 3</strong></td>
+              <td>SSF Native</td>
+              <td>The architecture is fully shaped by SSF. Exceptions are rare, explicit, contained, and documented.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="badge-row">
+          <span class="badge good"><span class="dot-good"></span>Level 3 = strongest claim</span>
+          <span class="badge warn"><span class="dot-warn"></span>Conditional approval must state scope</span>
+          <span class="badge bad"><span class="dot-bad"></span>Marketing-only claims are invalid</span>
+        </div>
+      </section>
+
+      <section class="card" id="approval">
+        <div class="section-tag">Section 07</div>
+        <h2>Approval process</h2>
+        <p>
+          An SSF approval must be based on documented evaluation, not vibes.
+          The same criteria must be applied across all systems.
+        </p>
+
+        <h3>Required approval fields</h3>
+        <ul>
+          <li>System name and version</li>
+          <li>Declared scope</li>
+          <li>Hardware or deployment assumptions</li>
+          <li>Security evaluation</li>
+          <li>Simplicity evaluation</li>
+          <li>Performance evaluation</li>
+          <li>Exception list</li>
+          <li>Final verdict</li>
+        </ul>
+
+        <h3>Valid verdicts</h3>
+        <table>
+          <thead>
+            <tr><th>Verdict</th><th>Meaning</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>SSF-approved</strong></td>
+              <td>The system satisfies SSF for its declared scope.</td>
+            </tr>
+            <tr>
+              <td><strong>Conditionally SSF-approved</strong></td>
+              <td>The system satisfies SSF only under clearly stated restrictions.</td>
+            </tr>
+            <tr>
+              <td><strong>Not SSF-approved</strong></td>
+              <td>The system fails one or more pillars in its default state.</td>
+            </tr>
+            <tr>
+              <td><strong>Not enough information</strong></td>
+              <td>The available evidence is insufficient for a responsible verdict.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card" id="tests">
+        <div class="section-tag">Section 08</div>
+        <h2>Test methodology</h2>
+        <p>
+          SSF testing should focus on default behavior and real user impact.
+          Tests should not reward theoretical configurability unless it is active by default.
+        </p>
+
+        <h3>Default-state tests</h3>
+        <ul>
+          <li>Install or reset the system using normal documented steps.</li>
+          <li>Do not apply expert hardening.</li>
+          <li>Record exposed services, default software sources, update behavior, and permission behavior.</li>
+          <li>Test whether ordinary apps receive broad access by default.</li>
+        </ul>
+
+        <h3>Security tests</h3>
+        <ul>
+          <li>Can an application access unrelated user data without explicit permission?</li>
+          <li>Can an application modify system state directly?</li>
+          <li>Are packages, apps, or updates verified by default?</li>
+          <li>Are incoming network services disabled unless intentionally enabled?</li>
+          <li>Can the system recover from failed updates or corruption?</li>
+        </ul>
+
+        <h3>Simplicity tests</h3>
+        <ul>
+          <li>How many normal ways exist to install software?</li>
+          <li>How many permission models does the user encounter?</li>
+          <li>Does first setup ask security-critical questions?</li>
+          <li>Can a normal user understand why a prompt appears?</li>
+          <li>Are settings duplicated across multiple tools?</li>
+        </ul>
+
+        <h3>Performance tests</h3>
+        <ul>
+          <li>What runs at idle?</li>
+          <li>Which services are always-on, and why?</li>
+          <li>Is background work visible and bounded?</li>
+          <li>Does the system remain responsive during routine maintenance?</li>
+          <li>Can the system explain resource-heavy components?</li>
+        </ul>
+      </section>
+
+      <section class="card" id="architecture">
+        <div class="section-tag">Section 09</div>
+        <h2>Architecture requirements</h2>
+        <p>
+          SSF compliance requires architectural support.
+          A system cannot be considered SSF-native if the architecture contradicts the standard and only optional tools compensate for it.
+        </p>
+
+        <h3>Kernel and trusted core</h3>
+        <ul>
+          <li>The trusted computing base should be minimized.</li>
+          <li>Privileged code paths should remain small and auditable where practical.</li>
+          <li>Convenience logic should not be moved into privileged layers without strong justification.</li>
+        </ul>
+
+        <h3>Application model</h3>
+        <ul>
+          <li>Applications should be untrusted by default.</li>
+          <li>Capabilities should be explicit, narrow, and revocable.</li>
+          <li>Broad filesystem, network, device, and IPC access must not be the default.</li>
+        </ul>
+
+        <h3>Service model</h3>
+        <ul>
+          <li>Services should be event-driven where possible.</li>
+          <li>Long-running services must justify continuous presence.</li>
+          <li>Service failure should not cascade into general system instability.</li>
+        </ul>
+
+        <h3>Update and recovery model</h3>
+        <ul>
+          <li>Updates should be atomic or transactional where practical.</li>
+          <li>Rollback must be available for base-system failure in higher compliance levels.</li>
+          <li>Security updates should not require expert action.</li>
+        </ul>
+
+        <h3>Filesystem model</h3>
+        <ul>
+          <li>System data, application data, and user data must be clearly separated.</li>
+          <li>System state should be protected or immutable in higher compliance levels.</li>
+          <li>Applications must not modify global state casually.</li>
+        </ul>
+      </section>
+
+      <section class="card" id="exceptions">
+        <div class="section-tag">Section 10</div>
+        <h2>Exception policy</h2>
+        <p>
+          SSF does not pretend that exceptions never exist.
+          It requires exceptions to be explicit, limited, documented, and reversible where possible.
+        </p>
+
+        <h3>Valid exceptions</h3>
+        <ul>
+          <li>A driver requiring elevated privileges for hardware support.</li>
+          <li>A compatibility layer for legacy software, if isolated and clearly marked.</li>
+          <li>An always-on service required for a core system function.</li>
+          <li>A broader permission grant chosen knowingly by the user for a specific reason.</li>
+        </ul>
+
+        <h3>Invalid exceptions</h3>
+        <ul>
+          <li>“Users can disable it later.”</li>
+          <li>“Power users understand this.”</li>
+          <li>“This is how legacy systems worked.”</li>
+          <li>“The hardware is fast enough to hide the cost.”</li>
+          <li>“The user clicked allow once, so broad permanent trust is fine.”</li>
+        </ul>
+      </section>
+
+      <section class="card" id="non-goals">
+        <div class="section-tag">Section 11</div>
+        <h2>Non-goals</h2>
+        <p>SSF is intentionally not trying to maximize every possible OS value.</p>
+        <ul>
+          <li>SSF is not maximum configurability.</li>
+          <li>SSF is not maximum legacy compatibility.</li>
+          <li>SSF is not maximum benchmark performance at all costs.</li>
+          <li>SSF is not security theater.</li>
+          <li>SSF is not minimalism for aesthetics alone.</li>
+          <li>SSF is not a brand claim without evidence.</li>
+        </ul>
+        <div class="rule">
+          <p><strong>SSF optimizes the default experience.</strong></p>
+          <p>It values safety, clarity, and responsiveness before optional power.</p>
+        </div>
+      </section>
+
+      <section class="card" id="versioning">
+        <div class="section-tag">Section 12</div>
+        <h2>Versioning</h2>
+        <p>
+          SSF should be versioned so evaluations remain comparable over time.
+          A system approved under one version is not automatically approved under a later version.
+        </p>
+
+        <h3>Version format</h3>
+        <ul>
+          <li><code>SSF 1.0</code> — first stable draft of the standard.</li>
+          <li><code>SSF 1.x</code> — clarifications that do not redefine the core doctrine.</li>
+          <li><code>SSF 2.0</code> — major changes to approval requirements or pillar definitions.</li>
+        </ul>
+
+        <h3>Evaluation label format</h3>
+        <p><code>System Name — SSF v1.0 — Verdict — Scope — Date</code></p>
+        <p class="muted">Example: <code>ExampleOS 4.2 — SSF v1.0 — Conditionally approved — kiosk deployments — 2026-04-24</code></p>
+      </section>
+
+
+      <section class="card" id="score-system">
+        <div class="section-tag">Scoring</div>
+        <h2>SSF Score System</h2>
+        <p>SSF v1.0 may be evaluated using an optional 100-point score model. The score does not replace written analysis; it standardizes comparison.</p>
+        <div class="grid-3">
+          <div class="mini"><h3>Secure — 40</h3><p>App isolation, system integrity, default network exposure, update model, and privilege boundaries.</p></div>
+          <div class="mini"><h3>Simple — 30</h3><p>Coherent system model, user cognitive load, setup complexity, and permission clarity.</p></div>
+          <div class="mini"><h3>Fast — 30</h3><p>Idle resource usage, background services, and responsiveness.</p></div>
+        </div>
+        <h3>Hard fail rules</h3>
+        <ul>
+          <li>If Secure is below 20/40, the system cannot be SSF-approved.</li>
+          <li>If Simple is below 15/30, the system cannot be fully SSF-approved for normal users.</li>
+          <li>If Fast is below 15/30, the system cannot be fully SSF-approved for daily general use.</li>
+        </ul>
+      </section>
+
+      <section class="card" id="statement">
+        <div class="section-tag">Section 13</div>
+        <h2>Final statement</h2>
+        <p>
+          SSF v1.0 exists to make OS design harder in the right way.
+          It rejects systems that are safe only after hardening, simple only after learning the stack, or fast only after disabling half the platform.
+        </p>
+        <div class="rule goodline">
+          <p><strong>A system is SSF only if security, simplicity, and speed are present in the default state, enforced by architecture, and preserved through rejection.</strong></p>
+        </div>
+      </section>
+
+      <section class="card" id="about">
+        <div class="section-tag">About</div>
+        <h2>About this specification</h2>
+        <div class="about">
+          <p>This document formalizes the SSF concept into a versioned v1.0 draft specification.</p>
+          <p><strong>Codename:</strong> Obsidian</p>
+          <p class="muted">The codename remains part of the project identity, but the specification itself is written to stand on its own.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="wrap footer">
+    SSF v1.0 Specification — Secure by default • Simple by default • Fast by default
+  </div>
+</body>
+</html>
